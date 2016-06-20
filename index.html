@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+</head>
+
+<body>
+	<canvas id="action-canvas" width="800" height="600">
+	</canvas>
+	<script src="js/Body.js"></script>
+	<script src="js/GravitySimulation.js"></script>
+	<script>
+		const gravity = new GravitySimulation('action-canvas', 800, 600, 100);
+		const sun = new Body();
+		sun.name = 'Sun';
+		sun.mass = 1.98892 * Math.pow(10, 30);
+		sun.pencolor('yellow');
+
+		const earth = new Body();
+		earth.name = 'Earth';
+		earth.mass = 5.9742 * Math.pow(10, 24);
+		earth.px = -1 * GravitySimulation.AU;
+		earth.vy = 29.783 * 1000;
+		earth.pencolor('blue');
+
+		const venus = new Body();
+		venus.name = 'Venus';
+		venus.mass = 4.8685 * Math.pow(10, 24);
+		venus.px = 0.723 * GravitySimulation.AU;
+		venus.vy = -35.02 * 1000;
+		venus.pencolor('red');
+
+		const asteroid1 = new Body();
+		asteroid1.name = 'Asteroid1';
+		asteroid1.mass = 1.49355 * Math.pow(10, 24);
+		asteroid1.px = 1.5 * GravitySimulation.AU;
+		asteroid1.vy = -35.02 * 1000;
+		asteroid1.pencolor('green');
+
+		gravity.run([sun, earth, venus, asteroid1], 60);
+	</script>
+</body>
+
+</html>
