@@ -6,6 +6,9 @@ class Body {
 		this.px = this.py = 0.0;
 		this.canvasContext = null;
 		this.color = 'black';
+
+		this.G = 6.67428e-11;
+		this.endAngle = 2 * Math.PI;
 	}
 
 	attraction(otherBody) {
@@ -24,7 +27,7 @@ class Body {
 		}
 
 		// force of the gravitation
-		const f = GravitySimulation.G * this.mass * otherBody.mass / (d * d);
+		const f = this.G * this.mass * otherBody.mass / (d * d);
 
 		// direction of the force
 		const theta = Math.atan2(dy, dx);
@@ -38,13 +41,13 @@ class Body {
 		this.color = color;
 	}
 
-	draw(x, y, sizeX, sizeY) {
+	draw(x, y, diameter) {
 		if (!this.canvasContext) {
 			throw new Error('Empty canvas context');
 		}
 
 		this.canvasContext.beginPath();
-		this.canvasContext.rect(x, y, sizeX, sizeY);
+		this.canvasContext.arc(x, y, diameter, 0, this.endAngle, false);
 		this.canvasContext.fillStyle = this.color;
 		this.canvasContext.fill();
 	}

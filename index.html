@@ -5,39 +5,91 @@
 </head>
 
 <body>
-	<canvas id="action-canvas" width="800" height="600">
+	<canvas id="action-canvas" width="1024" height="1024">
 	</canvas>
 	<script src="js/Body.js"></script>
 	<script src="js/GravitySimulation.js"></script>
 	<script>
-		const gravity = new GravitySimulation('action-canvas', 800, 600, 100);
+		const gravity = new GravitySimulation('action-canvas', 1024, 768, 60);
 		const sun = new Body();
-		sun.name = 'Sun';
+		sun.name = 'sun';
 		sun.mass = 1.98892 * Math.pow(10, 30);
+		sun.diameter = 54.5625 * GravitySimulation.EarthDiameter;
 		sun.pencolor('yellow');
 
-		const earth = new Body();
-		earth.name = 'Earth';
-		earth.mass = 5.9742 * Math.pow(10, 24);
-		earth.px = -1 * GravitySimulation.AU;
-		earth.vy = 29.783 * 1000;
-		earth.pencolor('blue');
+		const mercury = new Body();
+		mercury.name = 'mercury';
+		mercury.mass = 3.3 * Math.pow(10, 23);
+		mercury.px = 0.467 * GravitySimulation.AU;
+		mercury.vy = 47.4 * 1000;
+		mercury.diameter = 0.382 * GravitySimulation.EarthDiameter;
+		mercury.pencolor('orange');
 
 		const venus = new Body();
 		venus.name = 'Venus';
-		venus.mass = 4.8685 * Math.pow(10, 24);
-		venus.px = 0.723 * GravitySimulation.AU;
-		venus.vy = -35.02 * 1000;
-		venus.pencolor('red');
+		venus.mass = 4.87 * Math.pow(10, 24);
+		venus.px = 0.728 * GravitySimulation.AU;
+		venus.vy = 35.0 * 1000;
+		venus.diameter = 0.949 * GravitySimulation.EarthDiameter;
+		venus.pencolor('green');
 
-		const asteroid1 = new Body();
-		asteroid1.name = 'Asteroid1';
-		asteroid1.mass = 1.49355 * Math.pow(10, 24);
-		asteroid1.px = 1.5 * GravitySimulation.AU;
-		asteroid1.vy = -35.02 * 1000;
-		asteroid1.pencolor('green');
+		const earth = new Body();
+		earth.name = 'Earth';
+		earth.mass = 5.976 * Math.pow(10, 24);
+		earth.px = 1 * GravitySimulation.AU;
+		earth.vy = 29.8 * 1000;
+		earth.diameter = 1.0 * GravitySimulation.EarthDiameter;
+		earth.pencolor('blue');
 
-		gravity.run([sun, earth, venus, asteroid1], 60);
+		const mars = new Body();
+		mars.name = 'mars';
+		mars.mass = 6.42 * Math.pow(10, 23);
+		mars.px = 1.666 * GravitySimulation.AU;
+		mars.vy = 24.1 * 1000;
+		mars.diameter = 0.532 * GravitySimulation.EarthDiameter;
+		mars.pencolor('red');
+
+		const jupiter = new Body();
+		jupiter.name = 'jupiter';
+		jupiter.mass = 1.9 * Math.pow(10, 27);
+		jupiter.px = 5.455 * GravitySimulation.AU;
+		jupiter.vy = 13.1 * 1000;
+		jupiter.diameter = 11.19 * GravitySimulation.EarthDiameter;
+		jupiter.pencolor('brown');
+
+		const saturn = new Body();
+		saturn.name = 'saturn';
+		saturn.mass = 5.69 * Math.pow(10, 26);
+		saturn.px = 10.044 * GravitySimulation.AU;
+		saturn.vy = 9.6 * 1000;
+		saturn.diameter = 9.26 * GravitySimulation.EarthDiameter;
+		saturn.pencolor('green');
+
+		const uranus = new Body();
+		uranus.name = 'uranus';
+		uranus.mass = 8.68 * Math.pow(10, 25);
+		uranus.px = 20.07 * GravitySimulation.AU;
+		uranus.vy = 6.8 * 1000;
+		uranus.diameter = 4.01 * GravitySimulation.EarthDiameter;
+		uranus.pencolor('green');
+
+		const neptune = new Body();
+		neptune.name = 'neptune';
+		neptune.mass = 1.03 * Math.pow(10, 26);
+		neptune.px = 30.36 * GravitySimulation.AU;
+		neptune.vy = 5.4 * 1000;
+		neptune.diameter = 3.88 * GravitySimulation.EarthDiameter;
+		neptune.pencolor('green');
+
+		const pluto = new Body();
+		pluto.name = 'pluto';
+		pluto.mass = 1.9 * Math.pow(10, 22);
+		pluto.px = 49.33 * GravitySimulation.AU;
+		pluto.vy = 4.74 * 1000;
+		pluto.diameter = 0.18 * GravitySimulation.EarthDiameter;
+		pluto.pencolor('green');
+
+		gravity.run([sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]);
 	</script>
 </body>
 

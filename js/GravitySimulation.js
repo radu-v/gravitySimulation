@@ -1,52 +1,80 @@
-const G = 6.67428e-11;
 const AU = 149.6e6 * 1000; // 149.6 million km, in meters
 
 class GravitySimulation {
-	constructor(canvasId, width, height, fps) {
-		this.scale = 10 / AU;
+	constructor(canvasId, width, height, fps = 60) {
+		this.scale = 100 / AU;
 
 		this.canvasElement = document.getElementById(canvasId);
 		this.canvasWidth = width;
 		this.canvasHeight = height;
+		if (fps <= 0) {
+			fps = 60;
+		}
 		this.fpsInterval = 1000 / fps;
-	}
-
-	static get G() {
-		return G;
 	}
 
 	static get AU() {
 		return AU;
 	}
 
-	run(bodies, steps) {
+	static get EarthDiameter() {
+		return 12756000;
+	}
+
+	run(bodies, steps = 1000) {
 		// method body
-		var context = this.canvasElement.getContext('2d');
-		const that = this;
+		const canvasCtx = this.canvasElement.getContext('2d');
+
+		canvasCtx.currentScale = 1;
+
+		const wheelHandler = (e) => {
+			const ev = window.event || e;
+
+			ev.stopPropagation();
+			ev.preventDefault();
+
+			const delta = Math.max(-1, Math.min(1, ev.wheelDelta || -e.detail));
+
+			canvasCtx.currentScale += delta / 500;
+			console.log(canvasCtx.currentScale);
+			if (canvasCtx.currentScale <= 0) {
+				canvasCtx.currentScale = 0.1;
+			}
+			canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+			canvasCtx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
+			canvasCtx.scale(canvasCtx.currentScale, canvasCtx.currentScale);
+		};
+
+		this.canvasElement.addEventListener('mousewheel', wheelHandler, false);
+		this.canvasElement.addEventListener('DOMMouseScroll', wheelHandler, false);
 
 		this.then = Date.now();
 
-		context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-		context.save();
-		context.translate(this.canvasWidth / 2, this.canvasHeight / 2);
-		context.globalCompositeOperation = 'destination-over';
+		canvasCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+		canvasCtx.save();
+		canvasCtx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
+		canvasCtx.globalCompositeOperation = 'destination-over';
 
 		for (const body of bodies) {
-			body.canvasContext = context;
+			body.canvasContext = canvasCtx;
 		}
 
-		const draw = function () {
+		const draw = function (context) {
 			const timestep = 24 * 3600;
 			let step = 1;
 
 			const now = Date.now();
-			const elapsed = now - that.then;
+			const elapsed = now - context.then;
 
-			if (elapsed > that.fpsInterval) {
-				that.then = now - elapsed % that.fpsInterval;
+			if (elapsed > context.fpsInterval) {
+				context.then = now - elapsed % context.fpsInterval;
 				if (step < steps) {
 					step++;
-					// context.clearRect(-that.canvasWidth / 2, -that.canvasHeight / 2, that.canvasWidth, that.canvasHeight);
+
+					canvasCtx.save();
+					canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+					canvasCtx.clearRect(0, 0, context.canvasWidth, context.canvasHeight);
+					canvasCtx.restore();
 
 					const force = [];
 
@@ -74,13 +102,14 @@ class GravitySimulation {
 						body.px += body.vx * timestep;
 						body.py += body.vy * timestep;
 
-						body.draw(body.px * that.scale, body.py * that.scale, 1, 1);
+						body.draw(body.px * context.scale, body.py * context.scale, body.diameter * context.scale * 100);
 					}
+				} else {
+					clearInterval(context.drawInterval);
 				}
 			}
-			window.requestAnimationFrame(draw);
 		};
 
-		draw();
+		this.drawInterval = setInterval(draw, this.fpsInterval || 16, this); /* default 16ms = 60fps */
 	}
 }
